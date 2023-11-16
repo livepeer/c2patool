@@ -159,7 +159,7 @@ jobs:
     - name: Run make release
       run: make release
       env:
-        ARCH: ${{ platform.ARCH }}
+        ARCH: ${{ platform.arch }}
 
     - name: Upload binary to GitHub
       uses: svenstaro/upload-release-action@v1-release
