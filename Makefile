@@ -2,14 +2,25 @@
 # This is not required for automated builds
 
 ifeq ($(OS),Windows_NT)
-	PLATFORM := win
+	PLATFORM ?= win
+	ARCH ?= x86_64
 else
 	UNAME := $(shell uname)
     ifeq ($(UNAME),Linux)
-        PLATFORM := linux
+        PLATFORM ?= linux
     endif
     ifeq ($(UNAME),Darwin)
-        PLATFORM := mac
+        PLATFORM ?= mac
+    endif
+	UNAME_M := $(shell uname -m)
+    ifeq ($(UNAME_M),x86_64)
+        ARCH ?= x86_64
+    endif
+    ifeq ($(UNAME_M),aarch64)
+        ARCH ?= aarch64
+    endif
+    ifeq ($(UNAME_M),amd64)
+        ARCH ?= aarch64
     endif
 endif
 
@@ -40,8 +51,9 @@ c2patool-package:
 	cp CHANGELOG.md target/c2patool/CHANGELOG.md
 
 # These are for building the c2patool release bin on various platforms
-build-release-win:
-	cargo build --release
+build-release-win-x86:
+	rustup target add x86_64-pc-windows-msvc
+	cargo build --target=x86_64-pc-windows-msvc --release
 
 build-release-mac-arm:
 	rustup target add aarch64-apple-darwin
@@ -54,8 +66,13 @@ build-release-mac-x86:
 build-release-mac-universal: build-release-mac-arm build-release-mac-x86
 	lipo -create -output target/release/c2patool target/aarch64-apple-darwin/release/c2patool target/x86_64-apple-darwin/release/c2patool
 
-build-release-linux:
-	cargo build --release
+build-release-linux-x86:
+	rustup target add x86_64-unknown-linux-gnu
+	cargo build --target=x86_64-unknown-linux-gnu --release
+
+build-release-linux-arm:
+	rustup target add aarch64-unknown-linux-gnu
+	cargo build --target=aarch64-unknown-linux-gnu --release
 
 # Builds and packages a zip for c2patool for each platform
 ifeq ($(PLATFORM), mac)
@@ -63,10 +80,16 @@ release: build-release-mac-universal c2patool-package
 	cd target && zip -r c2patool_mac_universal.zip c2patool && cd ..
 endif
 ifeq ($(PLATFORM), win)
-release: build-release-win c2patool-package
+release: build-release-win-x86 c2patool-package
 	cd target && 7z a -r c2patool_win_intel.zip c2patool && cd ..
 endif
 ifeq ($(PLATFORM), linux)
-release: build-release-linux c2patool-package
+ifeq ($(ARCH), x86_64)
+release: build-release-linux-x86 c2patool-package
 	cd target && tar -czvf c2patool_linux_intel.tar.gz c2patool && cd ..
+endif
+ifeq ($(ARCH), aarch64)
+release: build-release-linux-arm c2patool-package
+	cd target && tar -czvf c2patool_linux_aarch64.tar.gz c2patool && cd ..
+endif
 endif

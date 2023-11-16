@@ -134,6 +134,10 @@ jobs:
           artifact_name: c2patool_mac_universal.zip
         - os: ubuntu-latest
           artifact_name: c2patool_linux_intel.tar.gz
+          arch: x86_64
+        - os: ubuntu-latest
+          artifact_name: c2patool_linux_aarch64.tar.gz
+          arch: aarch64
         - os: windows-latest
           artifact_name: c2patool_win_intel.zip
 
@@ -154,6 +158,8 @@ jobs:
 
     - name: Run make release
       run: make release
+      env:
+        ARCH: ${{ platform.ARCH }}
 
     - name: Upload binary to GitHub
       uses: svenstaro/upload-release-action@v1-release
