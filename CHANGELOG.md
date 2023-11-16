@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](https://semver.org), except that â
 
 Do not manually edit this file. It will be automatically updated when a new release is published.
 
+## 0.1.0
+_16 November 2023_
+
+
 ## 0.6.2
 _05 October 2023_
 
