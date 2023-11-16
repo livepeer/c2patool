@@ -102,21 +102,21 @@ jobs:
         tag: ${{ steps.set-version.outputs.version_tag }}
         token: ${{ secrets.GH_ADMIN_COMMIT_TOKEN }}
 
-  release-crate:
-    name: Release c2patool Rust crate
-    needs: repo-prep
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-      with:
-        ref: ${{ needs.repo-prep.outputs.commit-hash }}
+  # release-crate:
+  #   name: Release c2patool Rust crate
+  #   needs: repo-prep
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout repository
+  #     uses: actions/checkout@v3
+  #     with:
+  #       ref: ${{ needs.repo-prep.outputs.commit-hash }}
 
-    - name: Publish crate
-      run: |
-        cargo publish --token $CRATES_IO_SECRET
-      env:
-        CRATES_IO_SECRET: ${{ secrets.CRATES_IO_SECRET }}
+  #   - name: Publish crate
+  #     run: |
+  #       cargo publish --token $CRATES_IO_SECRET
+  #     env:
+  #       CRATES_IO_SECRET: ${{ secrets.CRATES_IO_SECRET }}
 
   publish-binaries:
     name: Publish c2patool binaries
