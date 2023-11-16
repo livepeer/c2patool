@@ -129,9 +129,11 @@ jobs:
         os: [macos-latest, ubuntu-latest, windows-latest]
         rust_version: [stable]
         experimental: [false]
+        arch: [x86_64, aarch64, universal]
         include:
         - os: macos-latest
           artifact_name: c2patool_mac_universal.zip
+          arch: universal
         - os: ubuntu-latest
           artifact_name: c2patool_linux_intel.tar.gz
           arch: x86_64
@@ -140,6 +142,7 @@ jobs:
           arch: aarch64
         - os: windows-latest
           artifact_name: c2patool_win_intel.zip
+          arch: x86_64
 
     steps:
     - name: Checkout repository
