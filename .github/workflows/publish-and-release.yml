@@ -128,7 +128,7 @@ jobs:
       matrix:
         rust_version: [stable]
         experimental: [false]
-        include:
+        target:
         - os: macos-latest
           artifact_name: c2patool_mac_universal.zip
           arch: universal
