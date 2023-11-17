@@ -126,6 +126,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        rust_version: [stable]
+        experimental: [false]
         include:
         - os: macos-latest
           artifact_name: c2patool_mac_universal.zip
