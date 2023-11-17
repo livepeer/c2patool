@@ -120,7 +120,7 @@ jobs:
 
   publish-binaries:
     name: Publish c2patool binaries
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.target.os }}
     needs: repo-prep
 
     strategy:
@@ -160,13 +160,13 @@ jobs:
     - name: Run make release
       run: make release
       env:
-        ARCH: ${{ matrix.arch }}
+        ARCH: ${{ matrix.target.arch }}
 
     - name: Upload binary to GitHub
       uses: svenstaro/upload-release-action@v1-release
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: target/${{ matrix.artifact_name }}
-        asset_name: ${{ matrix.artifact_name }}
+        file: target/${{ matrix.target.artifact_name }}
+        asset_name: ${{ matrix.target.artifact_name }}
         tag: ${{ needs.repo-prep.outputs.new-tag }}
         overwrite: true
